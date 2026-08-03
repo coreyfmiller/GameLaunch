@@ -10,6 +10,7 @@ import { VoteButton } from '@/components/game/vote-button'
 import { CommentsSection } from '@/components/game/comments-section'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { getGame, games } from '@/lib/data'
+import { getGameCover } from '@/lib/covers'
 
 export function generateStaticParams() {
   return games.map((g) => ({ slug: g.slug }))
@@ -100,7 +101,9 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
         gameUrl: dbGame.game_url,
         developer: dbGame.profiles?.display_name || dbGame.profiles?.username || 'Unknown',
         developerSlug: dbGame.profiles?.username || '',
+        developerX: null as string | null,
         aiTools: dbGame.ai_tools,
+        source: null as string | null,
         createdAt: dbGame.created_at,
         isDbGame: true as const,
       }
@@ -115,7 +118,9 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
         gameUrl: staticGame!.playUrl,
         developer: staticGame!.developer,
         developerSlug: staticGame!.developerSlug,
-        aiTools: null,
+        developerX: staticGame!.developerX,
+        aiTools: staticGame!.aiTools,
+        source: staticGame!.source,
         createdAt: staticGame!.createdAt,
         isDbGame: false as const,
       }
@@ -128,24 +133,34 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
       {/* Game info */}
       <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-4">
-          {game.cover && (
-            <div className="relative size-16 shrink-0 overflow-hidden rounded-xl border border-border">
-              <Image
-                src={game.cover}
-                alt={game.title}
-                fill
-                className="object-cover"
-                sizes="64px"
-              />
-            </div>
-          )}
+          <div className="relative size-16 shrink-0 overflow-hidden rounded-xl border border-border">
+            <Image
+              src={getGameCover(game.gameUrl, game.cover)}
+              alt={game.title}
+              fill
+              className="object-cover"
+              sizes="64px"
+              unoptimized
+            />
+          </div>
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
               {game.title}
             </h1>
             <p className="mt-0.5 text-sm text-muted-foreground">
               by{' '}
-              <span className="font-medium text-foreground">{game.developer}</span>
+              {game.developerX ? (
+                <a
+                  href={`https://x.com/${game.developerX}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-foreground hover:text-brand-purple"
+                >
+                  @{game.developerX}
+                </a>
+              ) : (
+                <span className="font-medium text-foreground">{game.developer}</span>
+              )}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <Badge className="bg-secondary text-foreground">{game.genre}</Badge>
@@ -170,6 +185,11 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
 
       {/* Tagline */}
       <p className="mt-4 text-lg text-muted-foreground">{game.tagline}</p>
+
+      {/* Source attribution */}
+      {game.source && (
+        <p className="mt-2 text-sm font-medium text-brand-purple">{game.source}</p>
+      )}
 
       {/* Description */}
       {game.description && (

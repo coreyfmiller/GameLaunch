@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: 'img.itch.zone',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'image.thum.io',
+        pathname: '/**',
+      },
     ],
   },
 }

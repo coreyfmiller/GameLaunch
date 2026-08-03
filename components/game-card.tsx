@@ -3,8 +3,11 @@ import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { StatusBadge } from '@/components/status-badge'
 import type { Game } from '@/lib/data'
+import { getGameCover } from '@/lib/covers'
 
 export function GameCard({ game }: { game: Game }) {
+  const coverUrl = getGameCover(game.playUrl, game.cover)
+
   return (
     <Link
       href={`/game/${game.slug}`}
@@ -12,11 +15,12 @@ export function GameCard({ game }: { game: Game }) {
     >
       <div className="relative aspect-[16/10] overflow-hidden">
         <Image
-          src={game.cover}
+          src={coverUrl}
           alt={`${game.title} cover art`}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, 33vw"
+          unoptimized
         />
         <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
         <div className="absolute left-3 top-3 flex gap-2">
