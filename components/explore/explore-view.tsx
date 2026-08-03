@@ -15,6 +15,7 @@ import {
 import { cn } from '@/lib/utils'
 
 const sortOptions = [
+  { key: 'featured', label: 'Featured' },
   { key: 'newest', label: 'Newest' },
   { key: 'title', label: 'A-Z' },
 ] as const
@@ -26,6 +27,8 @@ const statusList = Object.keys(STATUS_META) as DevStatus[]
 function sortGames(list: Game[], sort: SortKey) {
   const copy = [...list]
   switch (sort) {
+    case 'featured':
+      return copy.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
     case 'title':
       return copy.sort((a, b) => a.title.localeCompare(b.title))
     default:
@@ -37,7 +40,7 @@ export function ExploreView() {
   const [query, setQuery] = useState('')
   const [genre, setGenre] = useState('All')
   const [status, setStatus] = useState<DevStatus | 'All'>('All')
-  const [sort, setSort] = useState<SortKey>('newest')
+  const [sort, setSort] = useState<SortKey>('featured')
 
   const filtered = useMemo(() => {
     let list = games.filter((g) => {

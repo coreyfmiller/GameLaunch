@@ -30,7 +30,7 @@ const steps = [
 ]
 
 export default function HomePage() {
-  const featured = games.slice(0, 3)
+  const featured = games.filter((g) => g.featured)
   const trending = [...games]
     .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
     .slice(0, 3)

@@ -28,6 +28,7 @@ export type Game = {
   playUrl: string
   aiTools: string
   source: string
+  featured: boolean
   createdAt: string
 }
 
@@ -47,6 +48,7 @@ export const games: Game[] = [
     playUrl: 'https://capybara-vibejam26.leocoout.dev/',
     aiTools: 'Claude Code, Tripo3D, Suno, ElevenLabs',
     source: 'Vibe Jam 2026 — 1st Place ($25,000)',
+    featured: true,
     createdAt: '2026-04-29',
   },
   {
@@ -63,6 +65,7 @@ export const games: Game[] = [
     playUrl: 'https://fantos-megamart.vercel.app/',
     aiTools: 'AI-assisted (ThreeJS)',
     source: 'Vibe Jam 2026 — 2nd Place ($10,000)',
+    featured: true,
     createdAt: '2026-05-01',
   },
   {
@@ -79,6 +82,7 @@ export const games: Game[] = [
     playUrl: 'https://haldane4.denisbondare.com/',
     aiTools: 'Cursor',
     source: 'Vibe Jam 2026 — Most Original (Cursor Award)',
+    featured: false,
     createdAt: '2026-04-19',
   },
 
@@ -96,6 +100,7 @@ export const games: Game[] = [
     playUrl: 'https://playeyrie.com/',
     aiTools: 'AI-assisted (ThreeJS)',
     source: 'Vibe Jam 2026 — Most Atmospheric',
+    featured: false,
     createdAt: '2026-04-30',
   },
   {
@@ -112,6 +117,7 @@ export const games: Game[] = [
     playUrl: 'https://tinyskies.vercel.app/',
     aiTools: 'Cursor (ThreeJS)',
     source: 'Vibe Jam 2026 — Most Polished',
+    featured: true,
     createdAt: '2026-04-28',
   },
   {
@@ -128,6 +134,7 @@ export const games: Game[] = [
     playUrl: 'https://fullsend.game/',
     aiTools: 'Cursor (Vanilla JS, HTML5 Canvas)',
     source: 'Vibe Jam 2026 — Most Portal Transfers',
+    featured: false,
     createdAt: '2026-04-20',
   },
   {
@@ -144,6 +151,7 @@ export const games: Game[] = [
     playUrl: 'https://www.kansogame.com/',
     aiTools: 'AI-assisted (ThreeJS)',
     source: 'Vibe Jam 2026 — Most Zen (Glif Award)',
+    featured: false,
     createdAt: '2026-04-30',
   },
 
@@ -162,6 +170,7 @@ export const games: Game[] = [
     playUrl: 'https://racing.ryancampbell.com/',
     aiTools: 'Claude Code (Gauntlet Loop)',
     source: "SomethingBig.ai — Editor's Pick",
+    featured: false,
     createdAt: '2026-06-15',
   },
   {
@@ -178,6 +187,7 @@ export const games: Game[] = [
     playUrl: 'https://nuketown.luckeysystems.com/',
     aiTools: 'Claude Code (Gauntlet Loop)',
     source: 'SomethingBig.ai',
+    featured: false,
     createdAt: '2026-06-12',
   },
   {
@@ -194,6 +204,7 @@ export const games: Game[] = [
     playUrl: 'https://tonydowney.github.io/kindle/',
     aiTools: 'Claude Code (Gauntlet Loop)',
     source: 'SomethingBig.ai',
+    featured: false,
     createdAt: '2026-06-08',
   },
   {
@@ -210,6 +221,7 @@ export const games: Game[] = [
     playUrl: 'https://grandmas-house-alpha.vercel.app/',
     aiTools: 'Claude Code (Gauntlet Loop)',
     source: 'SomethingBig.ai',
+    featured: false,
     createdAt: '2026-06-14',
   },
   {
@@ -226,6 +238,7 @@ export const games: Game[] = [
     playUrl: 'https://e01.ai/starfall/',
     aiTools: 'Claude Code (Gauntlet Loop)',
     source: 'SomethingBig.ai',
+    featured: false,
     createdAt: '2026-06-20',
   },
   {
@@ -242,6 +255,7 @@ export const games: Game[] = [
     playUrl: 'https://longsilence.anshu.dev/',
     aiTools: 'Claude Code (Gauntlet Loop)',
     source: 'SomethingBig.ai',
+    featured: false,
     createdAt: '2026-06-05',
   },
   {
@@ -258,6 +272,7 @@ export const games: Game[] = [
     playUrl: 'https://windwakergame.vercel.app/',
     aiTools: 'Claude Code (Gauntlet Loop)',
     source: 'SomethingBig.ai',
+    featured: false,
     createdAt: '2026-06-18',
   },
   {
@@ -274,6 +289,7 @@ export const games: Game[] = [
     playUrl: 'https://claude-for-speed.vercel.app/',
     aiTools: 'Claude Code (Gauntlet Loop)',
     source: 'SomethingBig.ai',
+    featured: false,
     createdAt: '2026-06-16',
   },
   // === OTHER NOTABLE VIBE JAM ENTRIES ===
@@ -291,6 +307,7 @@ export const games: Game[] = [
     playUrl: 'https://slingshot.indiega.me/',
     aiTools: 'AI-assisted (Vanilla JS)',
     source: 'Vibe Jam 2026',
+    featured: false,
     createdAt: '2026-04-29',
   },
   {
@@ -307,6 +324,7 @@ export const games: Game[] = [
     playUrl: 'https://sunset-city.didof.dev/',
     aiTools: 'AI-assisted (ThreeJS)',
     source: 'Vibe Jam 2026 — #8 Overall',
+    featured: false,
     createdAt: '2026-04-28',
   },
   // === AWESOME AI-BUILT GAMES (notable standalone) ===
@@ -324,6 +342,7 @@ export const games: Game[] = [
     playUrl: 'https://artbitrator.com/',
     aiTools: 'AI-assisted',
     source: 'Awesome AI-Built Games',
+    featured: false,
     createdAt: '2026-03-01',
   },
   {
@@ -340,6 +359,7 @@ export const games: Game[] = [
     playUrl: 'https://www.typebattles.com/',
     aiTools: 'AI-assisted',
     source: 'Awesome AI-Built Games',
+    featured: false,
     createdAt: '2026-01-20',
   },
   {
@@ -356,6 +376,7 @@ export const games: Game[] = [
     playUrl: 'https://society.fail/',
     aiTools: 'AI-assisted',
     source: 'Awesome AI-Built Games',
+    featured: false,
     createdAt: '2026-02-01',
   },
   {
@@ -372,6 +393,7 @@ export const games: Game[] = [
     playUrl: 'https://drawlineracing.chyuang.com/',
     aiTools: 'AI-assisted',
     source: 'Awesome AI-Built Games',
+    featured: false,
     createdAt: '2026-03-10',
   },
   {
@@ -388,6 +410,7 @@ export const games: Game[] = [
     playUrl: 'https://sjwebster-bne.github.io/downhillmtb/',
     aiTools: 'Claude Code (Gauntlet Loop)',
     source: 'SomethingBig.ai',
+    featured: false,
     createdAt: '2026-06-09',
   },
   {
@@ -404,6 +427,7 @@ export const games: Game[] = [
     playUrl: 'https://voidtalker.com/games/dream-logic.html',
     aiTools: 'Claude Code (Gauntlet Loop)',
     source: 'SomethingBig.ai',
+    featured: false,
     createdAt: '2026-06-07',
   },
 ]
