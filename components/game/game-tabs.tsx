@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import {
   ArrowUp,
   ArrowDown,
@@ -9,7 +8,6 @@ import {
   Check,
   Circle,
   Star,
-  Clock,
   ThumbsUp,
 } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -17,8 +15,6 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Progress } from '@/components/ui/progress'
-import { StarRating } from '@/components/star-rating'
 import { StatusBadge } from '@/components/status-badge'
 import {
   type Game,
@@ -30,14 +26,7 @@ import {
 } from '@/lib/data'
 import { cn } from '@/lib/utils'
 
-const scoreLabels: Record<string, string> = {
-  fun: 'Fun',
-  graphics: 'Graphics',
-  originality: 'Originality',
-  replayability: 'Replayability',
-}
-
-const suggestionTypeColor: Record<Suggestion['type'], string> = {
+const suggestionTypeColor: Record<string, string> = {
   Feature: 'bg-brand-purple/15 text-brand-purple',
   Improvement: 'bg-brand-blue/15 text-brand-blue',
   Bug: 'bg-red-500/15 text-red-400',
@@ -45,7 +34,7 @@ const suggestionTypeColor: Record<Suggestion['type'], string> = {
   Balance: 'bg-brand-gold/15 text-brand-gold',
 }
 
-const suggestionStatusColor: Record<Suggestion['status'], string> = {
+const suggestionStatusColor: Record<string, string> = {
   Open: 'text-muted-foreground',
   Planned: 'text-brand-blue',
   'In Progress': 'text-brand-gold',
@@ -98,34 +87,6 @@ export function GameTabs({
         <div>
           <h2 className="mb-3 font-display text-xl font-bold">About</h2>
           <p className="leading-relaxed text-muted-foreground">{game.description}</p>
-        </div>
-
-        {game.screenshots.length > 0 && (
-          <div>
-            <h2 className="mb-3 font-display text-xl font-bold">Screenshots</h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {game.screenshots.map((src, i) => (
-                <div key={i} className="relative aspect-video overflow-hidden rounded-xl border border-border">
-                  <Image src={src || '/placeholder.svg'} alt={`${game.title} screenshot ${i + 1}`} fill className="object-cover" sizes="(max-width: 640px) 100vw, 50vw" />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div>
-          <h2 className="mb-3 font-display text-xl font-bold">Community Scores</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {Object.entries(game.scores).map(([key, val]) => (
-              <div key={key} className="rounded-xl border border-border bg-card p-4">
-                <div className="mb-2 flex items-center justify-between text-sm">
-                  <span className="font-medium">{scoreLabels[key]}</span>
-                  <span className="font-mono font-semibold text-brand-gold">{val.toFixed(1)}</span>
-                </div>
-                <Progress value={(val / 5) * 100} className="h-1.5" />
-              </div>
-            ))}
-          </div>
         </div>
 
         <div>
@@ -225,10 +186,10 @@ export function GameTabs({
               </div>
               <div className="flex-1">
                 <div className="mb-1.5 flex flex-wrap items-center gap-2">
-                  <span className={cn('rounded-full px-2 py-0.5 text-xs font-semibold', suggestionTypeColor[s.type])}>
+                  <span className={cn('rounded-full px-2 py-0.5 text-xs font-semibold', suggestionTypeColor[s.type] || 'bg-secondary text-muted-foreground')}>
                     {s.type}
                   </span>
-                  <span className={cn('text-xs font-semibold', suggestionStatusColor[s.status])}>
+                  <span className={cn('text-xs font-semibold', suggestionStatusColor[s.status] || 'text-muted-foreground')}>
                     {s.status}
                   </span>
                 </div>
@@ -281,14 +242,9 @@ export function GameTabs({
       {/* Reviews */}
       <TabsContent value="reviews" className="space-y-4">
         <div className="flex flex-wrap items-center gap-6 rounded-xl border border-border bg-card p-5">
-          <div className="text-center">
-            <div className="font-display text-4xl font-bold text-brand-gold">{game.rating.toFixed(1)}</div>
-            <StarRating value={game.rating} />
-            <p className="mt-1 text-xs text-muted-foreground">{game.reviews} reviews</p>
-          </div>
           <div className="flex-1">
             <p className="text-sm text-muted-foreground">
-              Players love the atmosphere and the rapid, community-driven update cadence.
+              Player reviews coming soon. Be the first to leave a review.
             </p>
           </div>
           <Button className="bg-brand-purple text-white hover:bg-brand-purple/90">
@@ -306,15 +262,10 @@ export function GameTabs({
                 </Avatar>
                 <div>
                   <p className="text-sm font-semibold">{r.author}</p>
-                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Clock className="size-3" /> {r.hours}h played
-                  </span>
+                  <span className="text-xs text-muted-foreground">{r.hours}h played</span>
                 </div>
               </div>
-              <div className="text-right">
-                <StarRating value={r.rating} />
-                <p className="mt-0.5 text-xs text-muted-foreground">{r.time}</p>
-              </div>
+              <p className="text-xs text-muted-foreground">{r.time}</p>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{r.body}</p>
           </div>

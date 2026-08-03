@@ -4,7 +4,7 @@ import { GameCard } from '@/components/game-card'
 import { SectionHeading } from '@/components/section-heading'
 import { HeroSection } from '@/components/home/hero-section'
 import { StatusJourney } from '@/components/home/status-journey'
-import { games, leaderboards } from '@/lib/data'
+import { games } from '@/lib/data'
 
 const steps = [
   {
@@ -31,7 +31,9 @@ const steps = [
 
 export default function HomePage() {
   const featured = games.slice(0, 3)
-  const trending = leaderboards.fastestGrowing.slice(0, 3)
+  const trending = [...games]
+    .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
+    .slice(0, 3)
 
   return (
     <>

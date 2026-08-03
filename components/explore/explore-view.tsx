@@ -15,11 +15,8 @@ import {
 import { cn } from '@/lib/utils'
 
 const sortOptions = [
-  { key: 'trending', label: 'Trending' },
   { key: 'newest', label: 'Newest' },
-  { key: 'rating', label: 'Top Rated' },
-  { key: 'funded', label: 'Most Funded' },
-  { key: 'players', label: 'Most Played' },
+  { key: 'title', label: 'A-Z' },
 ] as const
 
 type SortKey = (typeof sortOptions)[number]['key']
@@ -29,16 +26,10 @@ const statusList = Object.keys(STATUS_META) as DevStatus[]
 function sortGames(list: Game[], sort: SortKey) {
   const copy = [...list]
   switch (sort) {
-    case 'newest':
-      return copy.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
-    case 'rating':
-      return copy.sort((a, b) => b.rating - a.rating)
-    case 'funded':
-      return copy.sort((a, b) => b.funded - a.funded)
-    case 'players':
-      return copy.sort((a, b) => b.players - a.players)
+    case 'title':
+      return copy.sort((a, b) => a.title.localeCompare(b.title))
     default:
-      return copy.sort((a, b) => b.growth * b.upvotes - a.growth * a.upvotes)
+      return copy.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
   }
 }
 
@@ -46,7 +37,7 @@ export function ExploreView() {
   const [query, setQuery] = useState('')
   const [genre, setGenre] = useState('All')
   const [status, setStatus] = useState<DevStatus | 'All'>('All')
-  const [sort, setSort] = useState<SortKey>('trending')
+  const [sort, setSort] = useState<SortKey>('newest')
 
   const filtered = useMemo(() => {
     let list = games.filter((g) => {
@@ -66,7 +57,7 @@ export function ExploreView() {
       <div className="flex flex-col gap-2">
         <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Explore Games</h1>
         <p className="text-muted-foreground">
-          Discover {games.length * 34}+ AI-built games across every genre and stage of development.
+          Discover {games.length} AI-built games across every genre and stage of development.
         </p>
       </div>
 

@@ -5,7 +5,7 @@ import { Heart, Zap, Check, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
-import { formatMoney, formatCompact, type Game, type Bounty } from '@/lib/data'
+import { formatMoney, type Game, type Bounty } from '@/lib/data'
 import { cn } from '@/lib/utils'
 
 const presets = [5, 15, 50]
@@ -15,7 +15,6 @@ export function FundingSidebar({ game, bounties }: { game: Game; bounties: Bount
   const [custom, setCustom] = useState('')
   const [followed, setFollowed] = useState(false)
   const [donated, setDonated] = useState(false)
-  const pct = Math.min(100, Math.round((game.funded / game.goal) * 100))
 
   function donate() {
     setDonated(true)
@@ -24,22 +23,8 @@ export function FundingSidebar({ game, bounties }: { game: Game; bounties: Bount
 
   return (
     <div className="space-y-5 lg:sticky lg:top-20">
-      {/* Funding card */}
+      {/* Donation card */}
       <div className="rounded-2xl border border-border bg-card p-5">
-        <div className="flex items-baseline justify-between">
-          <span className="font-display text-2xl font-bold text-brand-gold">
-            {formatMoney(game.funded)}
-          </span>
-          <span className="text-sm text-muted-foreground">of {formatMoney(game.goal)} goal</span>
-        </div>
-        <Progress value={pct} className="mt-3 h-2" />
-        <div className="mt-2 flex justify-between text-xs text-muted-foreground">
-          <span>{pct}% funded</span>
-          <span>{formatCompact(game.followers)} backers</span>
-        </div>
-
-        <Separator className="my-5" />
-
         <p className="mb-3 text-sm font-semibold">Support this game</p>
         <div className="grid grid-cols-3 gap-2">
           {presets.map((p) => (
@@ -104,46 +89,48 @@ export function FundingSidebar({ game, bounties }: { game: Game; bounties: Bount
       </div>
 
       {/* Bounties */}
-      <div className="rounded-2xl border border-border bg-card p-5">
-        <div className="mb-4 flex items-center gap-2">
-          <Zap className="size-4 text-brand-purple" />
-          <h3 className="font-display font-bold">Feature Bounties</h3>
-        </div>
-        <p className="mb-4 text-sm text-muted-foreground">
-          Crowdfund specific features. When a bounty is fully funded, the developer builds it next.
-        </p>
-        <div className="space-y-4">
-          {bounties.map((b) => {
-            const bpct = Math.min(100, Math.round((b.funded / b.amount) * 100))
-            const complete = b.funded >= b.amount
-            return (
-              <div key={b.id}>
-                <div className="mb-1 flex items-center justify-between text-sm">
-                  <span className="font-medium">{b.title}</span>
-                  {complete ? (
-                    <span className="flex items-center gap-1 text-xs font-semibold text-emerald-400">
-                      <Sparkles className="size-3" /> Funded
-                    </span>
-                  ) : (
-                    <span className="text-xs text-muted-foreground">
-                      {formatMoney(b.funded)}/{formatMoney(b.amount)}
-                    </span>
-                  )}
+      {bounties.length > 0 && (
+        <div className="rounded-2xl border border-border bg-card p-5">
+          <div className="mb-4 flex items-center gap-2">
+            <Zap className="size-4 text-brand-purple" />
+            <h3 className="font-display font-bold">Feature Bounties</h3>
+          </div>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Crowdfund specific features. When a bounty is fully funded, the developer builds it next.
+          </p>
+          <div className="space-y-4">
+            {bounties.map((b) => {
+              const bpct = Math.min(100, Math.round((b.funded / b.amount) * 100))
+              const complete = b.funded >= b.amount
+              return (
+                <div key={b.id}>
+                  <div className="mb-1 flex items-center justify-between text-sm">
+                    <span className="font-medium">{b.title}</span>
+                    {complete ? (
+                      <span className="flex items-center gap-1 text-xs font-semibold text-emerald-400">
+                        <Sparkles className="size-3" /> Funded
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">
+                        {formatMoney(b.funded)}/{formatMoney(b.amount)}
+                      </span>
+                    )}
+                  </div>
+                  <Progress value={bpct} className="h-1.5" />
+                  <div className="mt-1.5 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{b.backers} backers</span>
+                    {!complete && (
+                      <button className="font-medium text-brand-purple hover:underline">
+                        Back this
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <Progress value={bpct} className="h-1.5" />
-                <div className="mt-1.5 flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{b.backers} backers</span>
-                  {!complete && (
-                    <button className="font-medium text-brand-purple hover:underline">
-                      Back this
-                    </button>
-                  )}
-                </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

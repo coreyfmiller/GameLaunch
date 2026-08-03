@@ -5,16 +5,13 @@ import { motion } from 'framer-motion'
 import { Compass, Rocket } from 'lucide-react'
 import { ButtonLink } from '@/components/ui/button-link'
 import { HeroBackground } from '@/components/hero-background'
-import { formatCompact, games } from '@/lib/data'
-
-const totalPlayers = games.reduce((a, g) => a + g.players, 0)
-const totalFunded = games.reduce((a, g) => a + g.funded, 0)
+import { games } from '@/lib/data'
 
 const stats = [
-  { label: 'Games launching', value: `${games.length * 34}+` },
-  { label: 'Active players', value: formatCompact(totalPlayers * 6) },
-  { label: 'Community funded', value: `$${formatCompact(totalFunded * 9)}` },
-  { label: 'Developers', value: '1.2K+' },
+  { label: 'Games listed', value: `${games.length}` },
+  { label: 'Genres', value: `${new Set(games.map((g) => g.genre)).size}` },
+  { label: 'Developers', value: `${new Set(games.map((g) => g.developerSlug)).size}` },
+  { label: 'All playable', value: '100%' },
 ]
 
 export function HeroSection() {
