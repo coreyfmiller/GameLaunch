@@ -13,9 +13,12 @@ export const metadata: Metadata = {
 }
 
 export default function TrendingPage() {
-  const trending = [...games].sort(
-    (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt),
-  )
+  // Featured games first, then the rest by date
+  const trending = [...games].sort((a, b) => {
+    if (a.featured && !b.featured) return -1
+    if (!a.featured && b.featured) return 1
+    return +new Date(b.createdAt) - +new Date(a.createdAt)
+  })
   const hero = trending[0]
 
   return (
@@ -65,7 +68,7 @@ export default function TrendingPage() {
       <div className="mt-12">
         <SectionHeading eyebrow="Hot right now" title="Trending games" />
         <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {trending.map((game) => (
+          {trending.slice(1).map((game) => (
             <GameCard key={game.slug} game={game} />
           ))}
         </div>
