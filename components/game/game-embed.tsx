@@ -15,33 +15,17 @@ export function GameEmbed({ gameUrl, title }: GameEmbedProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
-  // Give the iframe focus immediately when game starts so keyboard input goes to the game
+  // Auto-focus iframe when game starts
   useEffect(() => {
     if (started && iframeRef.current) {
-      // Small delay to let iframe load
       const timer = setTimeout(() => {
         iframeRef.current?.focus()
-      }, 500)
+      }, 300)
       return () => clearTimeout(timer)
     }
   }, [started])
 
-  // Prevent spacebar and arrow keys from scrolling the page at ALL times when game is active
-  useEffect(() => {
-    if (!started) return
-
-    function handleKeyDown(e: KeyboardEvent) {
-      // Block spacebar and arrows from doing page-level stuff
-      if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
-        e.preventDefault()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [started])
-
-  // Listen for fullscreen changes (e.g. user presses Escape)
+  // Track fullscreen state
   useEffect(() => {
     function onFullscreenChange() {
       setFullscreen(!!document.fullscreenElement)
@@ -53,17 +37,11 @@ export function GameEmbed({ gameUrl, title }: GameEmbedProps) {
   function toggleFullscreen() {
     const el = containerRef.current
     if (!el) return
-
     if (!document.fullscreenElement) {
       el.requestFullscreen()
     } else {
       document.exitFullscreen()
     }
-  }
-
-  // Click on container gives iframe focus
-  function handleContainerClick() {
-    iframeRef.current?.focus()
   }
 
   if (!started) {
@@ -78,7 +56,7 @@ export function GameEmbed({ gameUrl, title }: GameEmbedProps) {
             <Play className="mr-2 size-5" /> Play {title}
           </Button>
           <p className="mt-3 text-xs text-muted-foreground">
-            Click to load. Some games take a moment to start.
+            Click the game after it loads to give it keyboard focus
           </p>
         </div>
       </div>
@@ -88,24 +66,20 @@ export function GameEmbed({ gameUrl, title }: GameEmbedProps) {
   return (
     <div
       ref={containerRef}
-      onClick={handleContainerClick}
       className="relative w-full rounded-2xl border border-border overflow-hidden"
     >
-      <div className="absolute right-2 top-2 z-10 flex gap-1">
+      <div className="absolute right-2 top-2 z-10">
         <Button
-          onClick={(e) => { e.stopPropagation(); toggleFullscreen() }}
+          onClick={toggleFullscreen}
           size="icon"
           variant="secondary"
           className="size-8 opacity-70 hover:opacity-100"
           aria-label={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-          title="Fullscreen (recommended for keyboard games)"
+          title="Fullscreen"
         >
           {fullscreen ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
         </Button>
       </div>
-      <p className="absolute bottom-2 left-2 z-10 rounded bg-background/80 px-2 py-0.5 text-xs text-muted-foreground backdrop-blur">
-        Click game to focus. Use fullscreen for best experience.
-      </p>
       <iframe
         ref={iframeRef}
         src={gameUrl}
