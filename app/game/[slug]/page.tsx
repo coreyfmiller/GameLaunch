@@ -95,9 +95,11 @@ export default async function GamePage({ params }: { params: Promise<{ slug: str
             </div>
           </div>
           <div className="flex gap-2">
-            <Button size="lg" className="bg-brand-purple font-semibold text-white hover:bg-brand-purple/90 glow-purple">
-              <Play className="size-5" /> Play Now
-            </Button>
+            <a href={game.playUrl} target="_blank" rel="noopener noreferrer">
+              <Button size="lg" className="bg-brand-purple font-semibold text-white hover:bg-brand-purple/90 glow-purple">
+                <Play className="size-5" /> Play Now
+              </Button>
+            </a>
             <Button size="lg" variant="outline" aria-label="Share">
               <Share2 className="size-5" />
             </Button>
