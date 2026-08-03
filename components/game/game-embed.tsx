@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Maximize2, Minimize2, Play } from 'lucide-react'
 
@@ -12,18 +12,64 @@ interface GameEmbedProps {
 export function GameEmbed({ gameUrl, title }: GameEmbedProps) {
   const [started, setStarted] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  // Give the iframe focus immediately when game starts so keyboard input goes to the game
+  useEffect(() => {
+    if (started && iframeRef.current) {
+      // Small delay to let iframe load
+      const timer = setTimeout(() => {
+        iframeRef.current?.focus()
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [started])
+
+  // Prevent spacebar from scrolling the page when game is active
+  useEffect(() => {
+    if (!started) return
+
+    function handleKeyDown(e: KeyboardEvent) {
+      // If the iframe has focus (or the container), prevent spacebar from scrolling
+      if (e.code === 'Space' || e.key === ' ') {
+        const active = document.activeElement
+        if (
+          active === iframeRef.current ||
+          containerRef.current?.contains(active)
+        ) {
+          e.preventDefault()
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [started])
+
+  // Listen for fullscreen changes (e.g. user presses Escape)
+  useEffect(() => {
+    function onFullscreenChange() {
+      setFullscreen(!!document.fullscreenElement)
+    }
+    document.addEventListener('fullscreenchange', onFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
+  }, [])
 
   function toggleFullscreen() {
-    const el = document.getElementById('game-frame-container')
+    const el = containerRef.current
     if (!el) return
 
     if (!document.fullscreenElement) {
       el.requestFullscreen()
-      setFullscreen(true)
     } else {
       document.exitFullscreen()
-      setFullscreen(false)
     }
+  }
+
+  // Click on container gives iframe focus
+  function handleContainerClick() {
+    iframeRef.current?.focus()
   }
 
   if (!started) {
@@ -38,7 +84,7 @@ export function GameEmbed({ gameUrl, title }: GameEmbedProps) {
             <Play className="mr-2 size-5" /> Play {title}
           </Button>
           <p className="mt-3 text-xs text-muted-foreground">
-            Game loads in an embedded frame
+            Click to load. Some games take a moment to start.
           </p>
         </div>
       </div>
@@ -46,25 +92,34 @@ export function GameEmbed({ gameUrl, title }: GameEmbedProps) {
   }
 
   return (
-    <div id="game-frame-container" className="relative w-full rounded-2xl border border-border overflow-hidden">
-      <div className="absolute right-2 top-2 z-10">
+    <div
+      ref={containerRef}
+      onClick={handleContainerClick}
+      className="relative w-full rounded-2xl border border-border overflow-hidden"
+    >
+      <div className="absolute right-2 top-2 z-10 flex gap-1">
         <Button
-          onClick={toggleFullscreen}
+          onClick={(e) => { e.stopPropagation(); toggleFullscreen() }}
           size="icon"
           variant="secondary"
           className="size-8 opacity-70 hover:opacity-100"
           aria-label={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+          title="Fullscreen (recommended for keyboard games)"
         >
           {fullscreen ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
         </Button>
       </div>
+      <p className="absolute bottom-2 left-2 z-10 rounded bg-background/80 px-2 py-0.5 text-xs text-muted-foreground backdrop-blur">
+        Click game to focus. Use fullscreen for best experience.
+      </p>
       <iframe
+        ref={iframeRef}
         src={gameUrl}
         title={title}
         className="aspect-video w-full"
         sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
         allow="autoplay; fullscreen; gamepad; keyboard-map"
-        loading="lazy"
+        tabIndex={0}
       />
     </div>
   )
