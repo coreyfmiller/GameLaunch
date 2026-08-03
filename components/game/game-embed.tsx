@@ -26,25 +26,19 @@ export function GameEmbed({ gameUrl, title }: GameEmbedProps) {
     }
   }, [started])
 
-  // Prevent spacebar from scrolling the page when game is active
+  // Prevent spacebar and arrow keys from scrolling the page at ALL times when game is active
   useEffect(() => {
     if (!started) return
 
     function handleKeyDown(e: KeyboardEvent) {
-      // If the iframe has focus (or the container), prevent spacebar from scrolling
-      if (e.code === 'Space' || e.key === ' ') {
-        const active = document.activeElement
-        if (
-          active === iframeRef.current ||
-          containerRef.current?.contains(active)
-        ) {
-          e.preventDefault()
-        }
+      // Block spacebar and arrows from doing page-level stuff
+      if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+        e.preventDefault()
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
   }, [started])
 
   // Listen for fullscreen changes (e.g. user presses Escape)

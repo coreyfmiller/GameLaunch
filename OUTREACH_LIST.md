@@ -30,7 +30,7 @@ No exclusivity, no cost. Just more eyeballs. Submit at gamelaunch-nine.vercel.ap
 |---|-----|----------|------|-----|-------|
 | 1 | Leo Coout | @leocooout | A Game About Capybaras Delivering Food | capybara-vibejam26.leocoout.dev | 1st, $25K, 13K plays |
 | 2 | e_c_t_o | @e_c_t_o | Fanto's Mega-Mart | fantos-megamart.vercel.app | 2nd, $10K |
-| 3 | underpaid_mom | @underpaid_mom | WenWare | wen-ware.com | 3rd, 955K plays |
+| 3 | underpaid_mom | @underpaid_mom | WenWare | wen-ware.com | 3rd, 955K plays — BLOCKS IFRAME, reach out to whitelist |
 | 4 | Denis Bondarev | @denisbondare | HALDANE-4 | haldane4.denisbondare.com | Most Original |
 | 5 | Taylor | @taylor_sntx | Null Range | nullrange.com | Best Art Direction, MP space |
 | 6 | slowchaz | @slowchaz | Eyrie | playeyrie.com | Most Atmospheric, co-op |
