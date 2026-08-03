@@ -3,25 +3,31 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import { Menu, Search, Rocket, X } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { Menu, X, Rocket, LayoutDashboard, LogIn } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ButtonLink } from '@/components/ui/button-link'
 import { cn } from '@/lib/utils'
 
 const nav = [
-  { label: 'Home', href: '/' },
   { label: 'Explore', href: '/explore' },
   { label: 'Trending', href: '/trending' },
-  { label: 'Funding', href: '/funding' },
-  { label: 'Developers', href: '/developers' },
-  { label: 'Leaderboard', href: '/leaderboard' },
-  { label: 'Updates', href: '/updates' },
 ]
 
 export function SiteHeader() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const [user, setUser] = useState<{ id: string; email?: string } | null>(null)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user: u } }) => {
+      setUser(u ? { id: u.id, email: u.email ?? undefined } : null)
+      setLoaded(true)
+    })
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
@@ -29,7 +35,7 @@ export function SiteHeader() {
         <Link href="/" className="flex shrink-0 items-center gap-2">
           <Image
             src="/gamelaunch-logo.png"
-            alt="GameLaunch.ai"
+            alt="GameLaunch"
             width={168}
             height={48}
             className="h-9 w-auto"
@@ -58,16 +64,47 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="hidden sm:inline-flex" aria-label="Search">
-            <Search className="size-5" />
-          </Button>
-          <ButtonLink
-            href="/submit"
-            className="hidden bg-brand-gold font-semibold text-black hover:bg-brand-gold/90 sm:inline-flex"
-          >
-            <Rocket className="size-4" />
-            Submit Game
-          </ButtonLink>
+          {loaded && (
+            <>
+              {user ? (
+                <>
+                  <ButtonLink
+                    href="/dashboard"
+                    variant="ghost"
+                    className="hidden sm:inline-flex"
+                  >
+                    <LayoutDashboard className="size-4" />
+                    Dashboard
+                  </ButtonLink>
+                  <ButtonLink
+                    href="/submit"
+                    className="hidden bg-brand-purple font-semibold text-white hover:bg-brand-purple/90 sm:inline-flex"
+                  >
+                    <Rocket className="size-4" />
+                    Publish Game
+                  </ButtonLink>
+                </>
+              ) : (
+                <>
+                  <ButtonLink
+                    href="/login"
+                    variant="ghost"
+                    className="hidden sm:inline-flex"
+                  >
+                    <LogIn className="size-4" />
+                    Sign in
+                  </ButtonLink>
+                  <ButtonLink
+                    href="/login?next=/submit"
+                    className="hidden bg-brand-purple font-semibold text-white hover:bg-brand-purple/90 sm:inline-flex"
+                  >
+                    <Rocket className="size-4" />
+                    Publish Game
+                  </ButtonLink>
+                </>
+              )}
+            </>
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -93,14 +130,20 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <ButtonLink
-              href="/submit"
-              onClick={() => setOpen(false)}
-              className="mt-2 bg-brand-gold font-semibold text-black hover:bg-brand-gold/90"
-            >
-              <Rocket className="size-4" />
-              Submit Game
-            </ButtonLink>
+            {user ? (
+              <>
+                <Link href="/dashboard" onClick={() => setOpen(false)} className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground">
+                  Dashboard
+                </Link>
+                <Link href="/submit" onClick={() => setOpen(false)} className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground">
+                  Publish Game
+                </Link>
+              </>
+            ) : (
+              <Link href="/login" onClick={() => setOpen(false)} className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground">
+                Sign in
+              </Link>
+            )}
           </nav>
         </div>
       )}
